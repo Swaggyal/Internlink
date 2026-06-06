@@ -7,15 +7,14 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@Table(name = "students")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 
 public class Student extends User{
 
-    @Column(nullable = false)
-    private String university;
+    @Column(name = "university_name", nullable = false)
+    private String universityName;
 
     @Column(nullable = false)
     private String program;
