@@ -1,6 +1,6 @@
 package com.Internlink.backend.service;
 
-import com.Internlink.backend.dto.AuthRequest;
+import com.Internlink.backend.dto.LoginRequest;
 import com.Internlink.backend.dto.AuthResponse;
 import com.Internlink.backend.dto.RegisterRequest;
 import com.Internlink.backend.entity.User;
@@ -50,7 +50,7 @@ public class AuthService {
     }
 
     // Login user
-    public AuthResponse login(AuthRequest request) {
+    public AuthResponse login(LoginRequest request) {
         // Find user by email
         Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
 
