@@ -1,7 +1,8 @@
 package com.Internlink.backend.controller;
 
-import com.Internlink.backend.dto.AuthRequest;
+import com.Internlink.backend.dto.LoginRequest;
 import com.Internlink.backend.dto.AuthResponse;
+import com.Internlink.backend.dto.LoginRequest;
 import com.Internlink.backend.dto.RegisterRequest;
 import com.Internlink.backend.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class AuthController {
 
     // Login endpoint
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         AuthResponse response = authService.login(request);
 
         if (response.isSuccess()) {
