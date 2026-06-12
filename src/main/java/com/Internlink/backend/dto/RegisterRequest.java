@@ -1,7 +1,6 @@
 package com.Internlink.backend.dto;
 
 import com.Internlink.backend.entity.UserRole;
-import com.Internlink.backend.repository.UserRepository;
 import lombok.Data;
 
 @Data
