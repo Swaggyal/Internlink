@@ -1,9 +1,7 @@
 package com.Internlink.backend.controller;
 
+import com.Internlink.backend.dto.*;
 import com.Internlink.backend.dto.LoginRequest;
-import com.Internlink.backend.dto.AuthResponse;
-import com.Internlink.backend.dto.LoginRequest;
-import com.Internlink.backend.dto.RegisterRequest;
 import com.Internlink.backend.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,5 +36,15 @@ public class AuthController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    //Forgot Password endpoint
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(
+            @RequestBody ForgotPasswordRequest request) {
+
+        return ResponseEntity.ok(
+                authService.forgotPassword(request.getEmail())
+        );
     }
 }

@@ -1,9 +1,10 @@
 package com.Internlink.backend.service;
 
-import com.Internlink.backend.dto.LoginRequest;
 import com.Internlink.backend.dto.AuthResponse;
+import com.Internlink.backend.dto.LoginRequest;
 import com.Internlink.backend.dto.RegisterRequest;
 import com.Internlink.backend.entity.User;
+import com.Internlink.backend.entity.UserRole;
 import com.Internlink.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,61 +19,76 @@ public class AuthService {
 
     private final UserRepository userRepository;
 
-    // Register new user
+    // REGISTER
     public AuthResponse register(RegisterRequest request) {
+
+        // Validate required fields
+        if (request.getEmail() == null || request.getPassword() == null || request.getRole() == null) {
+            return new AuthResponse(null, null, request.getRole(), "Missing required fields", false);
+        }
+
         // Check if email already exists
         if (userRepository.existsByEmail(request.getEmail())) {
-            return new AuthResponse(null, null, null, null, "Email already registered", false);
+            return new AuthResponse(null, null, request.getRole(), "Email already registered", false);
         }
 
-        // Check if phone already exists
-        if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
-            return new AuthResponse(null, null, null, null, "Phone number already registered", false);
+        try {
+            User user = new User();
+            user.setEmail(request.getEmail());
+            user.setPassword(request.getPassword()); // Plain text for now
+            user.setRole(request.getRole());
+
+            User savedUser = userRepository.save(user);
+
+            return new AuthResponse(
+                    savedUser.getId(),
+                    savedUser.getEmail(),
+                    savedUser.getRole(),
+                    "Registration successful",
+                    true
+            );
+
+        } catch (Exception e) {
+            return new AuthResponse(null, null, request.getRole(),
+                    "Server error: " + e.getMessage(), false);
         }
-
-        // Create new user
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword()); // Plain text for now
-        user.setPhoneNumber(request.getPhoneNumber());
-        user.setRole(request.getRole());
-
-        User savedUser = userRepository.save(user);
-
-        return new AuthResponse(
-                savedUser.getId(),
-                savedUser.getEmail(),
-                savedUser.getPhoneNumber(),
-                savedUser.getRole(),
-                "Registration successful",
-                true
-        );
     }
 
-    // Login user
+    // LOGIN
     public AuthResponse login(LoginRequest request) {
-        // Find user by email
+
+        if (request.getEmail() == null || request.getPassword() == null) {
+            return new AuthResponse(null, null, null, "Missing email or password", false);
+        }
+
         Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
 
         if (userOptional.isEmpty()) {
-            return new AuthResponse(null, null, null, null, "User not found", false);
+            return new AuthResponse(null, null, null, "User not found", false);
         }
 
         User user = userOptional.get();
 
-        // Verify password (plain text comparison for now)
+        // Verify password (plain text comparison)
         if (!user.getPassword().equals(request.getPassword())) {
-            return new AuthResponse(null, null, null, null, "Invalid password", false);
+            return new AuthResponse(null, null, null, "Invalid password", false);
         }
 
         // Login successful
         return new AuthResponse(
                 user.getId(),
                 user.getEmail(),
-                user.getPhoneNumber(),
                 user.getRole(),
                 "Login successful",
                 true
         );
+    }
+
+    public String forgotPassword(String email){
+
+        if (!userRepository.existsByEmail(email)) {
+            return "Email not found";
+        }
+        return "Reset link sent successfully";
     }
 }

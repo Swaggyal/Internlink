@@ -41,14 +41,6 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Get user by phone number
-    @GetMapping("/phone/{phoneNumber}")
-    public ResponseEntity<User> getUserByPhoneNumber(@PathVariable String phoneNumber) {
-        Optional<User> user = userService.getUserByPhoneNumber(phoneNumber);
-        return user.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
     // Get all users by role
     @GetMapping("/role/{role}")
     public ResponseEntity<List<User>> getUsersByRole(@PathVariable UserRole role) {
@@ -72,7 +64,6 @@ public class UserController {
             User user = existingUser.get();
             user.setEmail(userDetails.getEmail());
             user.setPassword(userDetails.getPassword());
-            user.setPhoneNumber(userDetails.getPhoneNumber());
             user.setRole(userDetails.getRole());
 
             User updatedUser = userService.updateUser(user);
@@ -98,10 +89,4 @@ public class UserController {
         return ResponseEntity.ok(exists);
     }
 
-    // Check if phone exists
-    @GetMapping("/check-phone/{phoneNumber}")
-    public ResponseEntity<Boolean> phoneExists(@PathVariable String phoneNumber) {
-        boolean exists = userService.phoneExists(phoneNumber);
-        return ResponseEntity.ok(exists);
     }
-}

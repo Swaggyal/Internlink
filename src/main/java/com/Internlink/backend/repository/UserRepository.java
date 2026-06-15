@@ -15,15 +15,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Find user by email (for login)
     Optional<User> findByEmail(String email);
 
-    // Find user by phone number
-    Optional<User> findByPhoneNumber(String phoneNumber);
-
     // Find all users with a specific role
     List<User> findByRole(UserRole role);
 
     // Check if email exists
     boolean existsByEmail(String email);
 
-    // Check if phone exists
-    boolean existsByPhoneNumber(String phoneNumber);
 }

@@ -4,16 +4,18 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Student extends User{
+public class Student{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "university_name", nullable = false)
+    @Column(nullable = false)
     private String universityName;
 
     @Column(nullable = false)
@@ -28,9 +30,11 @@ public class Student extends User{
     @Column(length = 500)
     private String bio;
 
-    @ElementCollection
+    /*@ElementCollection
     @CollectionTable(name = "student_skills", joinColumns = @JoinColumn(name = "student_id"))
     @Column(name = "skill")
     private List<String> skills; // e.g., ["Java", "Python", "SQL"]
+
+     */
 
 }

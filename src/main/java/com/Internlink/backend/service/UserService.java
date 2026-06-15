@@ -32,11 +32,6 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    // Find user by phone number
-    public Optional<User> getUserByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber);
-    }
-
     // Find all users with a specific role
     public List<User> getUsersByRole(UserRole role) {
         return userRepository.findByRole(role);
@@ -47,10 +42,6 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    // Check if phone already exists
-    public boolean phoneExists(String phoneNumber) {
-        return userRepository.existsByPhoneNumber(phoneNumber);
-    }
 
     // Update user
     public User updateUser(User user) {
