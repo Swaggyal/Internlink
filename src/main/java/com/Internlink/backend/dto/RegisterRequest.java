@@ -7,5 +7,7 @@ import lombok.Data;
 public class RegisterRequest {
     private String email;
     private String password;
-    private UserRole role = UserRole.User;
+    private String phoneNumber;
+    private UserRole role;
+    private String level; // add this
 }
