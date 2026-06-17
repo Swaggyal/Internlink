@@ -25,16 +25,11 @@ public class AuthService {
             return new AuthResponse(null, null, null, null, "Email already registered", false);
         }
 
-        // Check if phone already exists
-        if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
-            return new AuthResponse(null, null, null, null, "Phone number already registered", false);
-        }
 
         // Create new user
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword()); // Plain text for now
-        user.setPhoneNumber(request.getPhoneNumber());
         user.setRole(request.getRole());
 
 
@@ -43,7 +38,6 @@ public class AuthService {
         return new AuthResponse(
                 savedUser.getId(),
                 savedUser.getEmail(),
-                savedUser.getPhoneNumber(),
                 savedUser.getRole(),
                 "Registration successful",
                 true
@@ -70,10 +64,18 @@ public class AuthService {
         return new AuthResponse(
                 user.getId(),
                 user.getEmail(),
-                user.getPhoneNumber(),
                 user.getRole(),
                 "Login successful",
                 true
         );
     }
+
+    public String forgotPassword(String email) {
+
+        if (!userRepository.existsByEmail(email)) {
+            return "Email not found";
+        }
+        return "Reset link sent successfully";
+    }
+
 }
