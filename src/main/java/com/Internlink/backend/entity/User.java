@@ -33,6 +33,7 @@ public class User {
 
     private LocalDateTime updatedAt;
 
+    @Column(name = "email_verified")
     private boolean emailVerified = false;
 
     private String otpCode;

@@ -47,4 +47,16 @@ public class AuthController {
                 authService.forgotPassword(request.getEmail())
         );
     }
+
+    //Email verification endpoint
+    @PostMapping("/verify-email")
+    public ResponseEntity<String> verifyEmail(
+            @RequestBody VerifyEmailRequest request) {
+        return ResponseEntity.ok(
+                authService.verifyEmail(
+                        request.getEmail(),
+                        request.getOtp()
+                )
+        );
+    }
 }

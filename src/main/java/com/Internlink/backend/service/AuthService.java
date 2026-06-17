@@ -84,11 +84,30 @@ public class AuthService {
         );
     }
 
+    //Forgot Password
     public String forgotPassword(String email){
 
         if (!userRepository.existsByEmail(email)) {
             return "Email not found";
         }
         return "Reset link sent successfully";
+    }
+
+    //Email Verification
+    public String verifyEmail(String email, String otp) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!otp.equals(user.getOtpCode())) {
+            throw new RuntimeException("Invalid OTP");
+        }
+
+        user.setEmailVerified(true);
+        user.setOtpCode(null);
+
+        userRepository.save(user);
+
+        return "Email verified successfully";
     }
 }
