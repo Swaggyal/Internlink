@@ -3,6 +3,7 @@ package com.Internlink.backend.service;
 import com.Internlink.backend.dto.AuthResponse;
 import com.Internlink.backend.dto.LoginRequest;
 import com.Internlink.backend.dto.RegisterRequest;
+import com.Internlink.backend.entity.Student;
 import com.Internlink.backend.entity.User;
 import com.Internlink.backend.entity.UserRole;
 import com.Internlink.backend.repository.UserRepository;
@@ -21,36 +22,31 @@ public class AuthService {
 
     // REGISTER
     public AuthResponse register(RegisterRequest request) {
-
-        // Validate required fields
         if (request.getEmail() == null || request.getPassword() == null || request.getRole() == null) {
             return new AuthResponse(null, null, request.getRole(), "Missing required fields", false);
         }
-
-        // Check if email already exists
         if (userRepository.existsByEmail(request.getEmail())) {
             return new AuthResponse(null, null, request.getRole(), "Email already registered", false);
         }
-
         try {
-            User user = new User();
+            User user;
+
+            // If registering as STUDENT, create a Student entity instead of User
+            if (request.getRole() == UserRole.STUDENT) {
+                user = new Student();
+                ((Student) user).setProfileCompleted(false);
+                ((Student) user).setProfileStrength(0);
+            } else {
+                user = new User();
+            }
+
             user.setEmail(request.getEmail());
-            user.setPassword(request.getPassword()); // Plain text for now
+            user.setPassword(request.getPassword());
             user.setRole(request.getRole());
-
             User savedUser = userRepository.save(user);
-
-            return new AuthResponse(
-                    savedUser.getId(),
-                    savedUser.getEmail(),
-                    savedUser.getRole(),
-                    "Registration successful",
-                    true
-            );
-
+            return new AuthResponse(savedUser.getId(), savedUser.getEmail(), savedUser.getRole(), "Registration successful", true);
         } catch (Exception e) {
-            return new AuthResponse(null, null, request.getRole(),
-                    "Server error: " + e.getMessage(), false);
+            return new AuthResponse(null, null, request.getRole(), "Server error: " + e.getMessage(), false);
         }
     }
 

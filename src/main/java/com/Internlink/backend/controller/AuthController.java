@@ -1,9 +1,6 @@
 package com.Internlink.backend.controller;
 
-import com.Internlink.backend.dto.ForgotPasswordRequest;
-import com.Internlink.backend.dto.LoginRequest;
-import com.Internlink.backend.dto.AuthResponse;
-import com.Internlink.backend.dto.RegisterRequest;
+import com.Internlink.backend.dto.*;
 import com.Internlink.backend.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
