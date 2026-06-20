@@ -1,5 +1,6 @@
 package com.Internlink.backend.service;
 
+import com.Internlink.backend.dto.CareerServicesRequest;
 import com.Internlink.backend.entity.University;
 import com.Internlink.backend.repository.UniversityRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +36,23 @@ public class UniversityService {
         existing.setUniversityEmail(updatedData.getUniversityEmail());
         existing.setUniversityPhone(updatedData.getUniversityPhone());
         existing.setWebsite(updatedData.getWebsite());
-        existing.setCareerOfficerName(updatedData.getCareerOfficerName());
-        existing.setCareerOfficerEmail(updatedData.getCareerOfficerEmail());
+        existing.setInternshipCoordinatorName(updatedData.getInternshipCoordinatorName());
+        existing.setInternshipCoordinatorEmail(updatedData.getInternshipCoordinatorEmail());
         return universityRepository.save(existing);
+    }
+
+    public University updateCareerServices(Long id, CareerServicesRequest request) {
+        University university = getUniversityById(id);
+
+        university.setCareerServicesContactName(request.getCareerServicesContactName());
+        university.setDepartmentEmail(request.getDepartmentEmail());
+        university.setPlacementOfficeAddress(request.getPlacementOfficeAddress());
+        university.setPlacementOfficePhone(request.getPlacementOfficePhone());
+        university.setPlacementOfficeHours(request.getPlacementOfficeHours());
+        university.setInternshipCoordinatorName(request.getInternshipCoordinatorName());
+        university.setInternshipCoordinatorEmail(request.getInternshipCoordinatorEmail());
+
+        return universityRepository.save(university);
     }
 
     public void deleteUniversity(Long id) {

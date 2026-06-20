@@ -1,5 +1,6 @@
 package com.Internlink.backend.controller;
 
+import com.Internlink.backend.dto.CareerServicesRequest;
 import com.Internlink.backend.entity.University;
 import com.Internlink.backend.service.UniversityService;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +42,12 @@ public class UniversityController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         universityService.deleteUniversity(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/onboarding/career-services")
+    public ResponseEntity<University> updateCareerServices(
+            @PathVariable Long id,
+            @RequestBody CareerServicesRequest request) {
+        return ResponseEntity.ok(universityService.updateCareerServices(id, request));
     }
 }
