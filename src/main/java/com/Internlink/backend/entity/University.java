@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Data
@@ -43,6 +44,8 @@ public class University {
     private String city;
     private Integer numberOfStudents;
 
+
+
     @ElementCollection
     @CollectionTable(name = "university_academic_programs", joinColumns = @JoinColumn(name = "university_id"))
     @Column(name = "program")
@@ -76,4 +79,8 @@ public class University {
         updatedAt = LocalDateTime.now();
     }
 
-}
+
+
+    }
+
+
