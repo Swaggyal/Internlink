@@ -43,11 +43,11 @@ public class Company {
     @Enumerated(EnumType.STRING)
     private CompanySize companySize;
 
-//    @Column(nullable = false)
-//    private String contactPersonName; // HR contact at company
-//
-//    @Column(nullable = false)
-//    private String contactPersonPhone;
+   @Column
+    private String contactPersonName; // HR contact at company
+
+    @Column
+    private String contactPersonPhone;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -64,4 +64,5 @@ public class Company {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,22 +20,31 @@ public class Internship {
     private Long id;
 
     @Column(nullable = false)
-    private String title; // e.g. "Frontend Intern"
+    private String title;
 
     @Column(nullable = false)
-    private String companyName; // e.g. "Stripe"
+    private String companyName;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     @Column(nullable = false)
-    private String location; // e.g. "Remote"
+    private String location;
 
     @Column(nullable = false)
-    private String pay; // e.g. "$45/hr"
+    private String pay;
 
     @Column(nullable = false)
-    private String duration; // e.g. "12 weeks"
+    private String duration;
 
     @Column(length = 2000)
     private String description;
+
+    @Column(length = 2000)
+    private String requirements;
+
+    private LocalDate deadline;
 
     @ElementCollection
     @CollectionTable(name = "internship_required_skills",
@@ -48,7 +58,7 @@ public class Internship {
     private boolean isRemote;
 
     @Enumerated(EnumType.STRING)
-    private InternshipStatus status; // OPEN, CLOSED, FILLED
+    private InternshipStatus status;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -64,7 +74,5 @@ public class Internship {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-
-
-        }
     }
+}

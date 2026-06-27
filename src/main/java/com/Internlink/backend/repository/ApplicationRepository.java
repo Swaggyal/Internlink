@@ -3,6 +3,8 @@ package com.Internlink.backend.repository;
 import com.Internlink.backend.entity.Application;
 import com.Internlink.backend.entity.ApplicationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,4 +33,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     // Count applications for an internship
     long countByInternshipListingId(Long internshipId);
+
+    @Query("SELECT a FROM Application a WHERE a.internshipListing.company.id = :companyId")
+    List<Application> findByCompanyId(@Param("companyId") Long companyId);
 }

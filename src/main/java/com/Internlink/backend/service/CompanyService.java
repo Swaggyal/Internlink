@@ -24,13 +24,13 @@ public class CompanyService {
         return companyRepository.findAll();
     }
 
-    public Company getCompanyById(Long id) {
+    public Company getProfile(Long id) {
         return companyRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Company not found with id: " + id));
     }
 
-    public Company updateCompany(Long id, Company updatedData) {
-        Company existing = getCompanyById(id);
+    public Company updateProfile(Long id, Company updatedData) {
+        Company existing = getProfile(id);
         existing.setCompanyName(updatedData.getCompanyName());
         existing.setCompanyEmail(updatedData.getCompanyEmail());
         existing.setCompanyPhone(updatedData.getCompanyPhone());
