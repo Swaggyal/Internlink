@@ -5,6 +5,7 @@ import com.Internlink.backend.entity.InternshipStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface InternshipRepository extends JpaRepository<Internship, Long> {
@@ -18,4 +19,7 @@ public interface InternshipRepository extends JpaRepository<Internship, Long> {
     List<Internship> findByIsRemote(boolean isRemote);
 
     List<Internship> findByTitleContainingIgnoreCase(String keyword);
+
+    List<Internship> findByCompanyId(Long companyId);
+    Optional<Internship> findByIdAndCompanyId(Long internshipId, Long companyId);
 }

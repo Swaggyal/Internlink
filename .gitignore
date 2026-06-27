@@ -61,3 +61,4 @@ bin/
 # OS
 Thumbs.db
 node_modules/
+src/main/resources/application.properties

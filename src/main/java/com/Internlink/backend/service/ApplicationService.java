@@ -109,4 +109,10 @@ public class ApplicationService {
     public List<Application> getAllApplications() {
         return applicationRepository.findAll();
     }
+
+    //Get all applicants for a company
+    public List<Application> findByCompanyId(Long companyId) {
+
+        return applicationRepository.findByCompanyId(companyId);
+    }
 }
