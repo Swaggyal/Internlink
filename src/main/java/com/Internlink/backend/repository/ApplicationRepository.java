@@ -31,4 +31,9 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     // Count applications for an internship
     long countByInternshipListingId(Long internshipId);
+
+    long countByStudentId(Long studentId);
+    long countByStudentIdAndStatus(Long studentId, ApplicationStatus status);
+
+
 }

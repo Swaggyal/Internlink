@@ -1,6 +1,8 @@
 package com.Internlink.backend.service;
 
+import com.Internlink.backend.entity.ApplicationStatus;
 import com.Internlink.backend.entity.Student;
+import com.Internlink.backend.repository.ApplicationRepository;
 import com.Internlink.backend.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.Optional;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final ApplicationRepository applicationRepository;
 
     // Get student by ID
     public Optional<Student> getStudentById(Long id) {
@@ -123,6 +126,18 @@ public class StudentService {
     // Get all students
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
+    }
+
+    // Get student stats
+    public StudentStatsResponse getStudentStats(Long studentId) {
+        Optional<Student> studentOpt = studentRepository.findById(studentId);
+        if (studentOpt.isEmpty()) return null;
+
+        long appliedCount = applicationRepository.countByStudentId(studentId);
+        long interviewsCount = applicationRepository.countByStudentIdAndStatus(studentId, ApplicationStatus.INTERVIEW_SCHEDULED);
+        long offersCount = applicationRepository.countByStudentIdAndStatus(studentId, ApplicationStatus.ACCEPTED);
+
+        return new StudentStatsResponse(appliedCount, interviewsCount, offersCount);
     }
 
 }
