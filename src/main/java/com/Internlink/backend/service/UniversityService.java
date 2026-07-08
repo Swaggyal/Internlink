@@ -1,8 +1,11 @@
 package com.Internlink.backend.service;
 
 import com.Internlink.backend.dto.CareerServicesRequest;
+import com.Internlink.backend.entity.Internship;
+import com.Internlink.backend.entity.InternshipStatus;
 import com.Internlink.backend.entity.Student;
 import com.Internlink.backend.entity.University;
+import com.Internlink.backend.repository.InternshipRepository;
 import com.Internlink.backend.repository.StudentRepository;
 import com.Internlink.backend.repository.UniversityRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,8 @@ public class UniversityService {
 
     private final UniversityRepository universityRepository;
     private final StudentRepository studentRepository;
+    private final InternshipRepository internshipRepository;
+
 
     public University registerUniversity(University university) {
         if (universityRepository.existsByUniversityEmail(university.getUniversityEmail())) {
@@ -86,5 +91,10 @@ public class UniversityService {
         stats.put("city", university.getCity());
         stats.put("country", university.getCountry());
         return stats;
+    }
+
+    public List<Internship> getInternshipsForUniversity(Long universityId) {
+        // Get all open internships that students can view
+        return internshipRepository.findByStatus(InternshipStatus.OPEN);
     }
 }

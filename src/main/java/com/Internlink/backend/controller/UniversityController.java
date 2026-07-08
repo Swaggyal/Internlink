@@ -1,6 +1,7 @@
 package com.Internlink.backend.controller;
 
 import com.Internlink.backend.dto.CareerServicesRequest;
+import com.Internlink.backend.entity.Internship;
 import com.Internlink.backend.entity.Student;
 import com.Internlink.backend.entity.University;
 import com.Internlink.backend.service.UniversityService;
@@ -66,5 +67,10 @@ public class UniversityController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         universityService.deleteUniversity(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/internships")
+    public ResponseEntity<List<Internship>> getInternships(@PathVariable Long id) {
+        return ResponseEntity.ok(universityService.getInternshipsForUniversity(id));
     }
 }

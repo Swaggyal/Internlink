@@ -34,14 +34,10 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     // Count applications for an internship
     long countByInternshipListingId(Long internshipId);
 
-<<<<<<< HEAD
     long countByStudentId(Long studentId);
     long countByStudentIdAndStatus(Long studentId, ApplicationStatus status);
 
-
-}
-=======
     @Query("SELECT a FROM Application a WHERE a.internshipListing.company.id = :companyId")
     List<Application> findByCompanyId(@Param("companyId") Long companyId);
 }
->>>>>>> 8f3d157df79001d2f3aaddf1332bb59222401417
+

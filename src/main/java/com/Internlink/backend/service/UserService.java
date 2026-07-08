@@ -57,4 +57,18 @@ public class UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    //Change user password
+    public boolean changePassword(Long userId, String oldPassword, String newPassword) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (user.getPassword().equals(oldPassword)) {
+                user.setPassword(newPassword);
+                userRepository.save(user);
+                return true;
+            }
+        }
+        return false;
+    }
 }

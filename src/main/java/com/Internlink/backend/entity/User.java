@@ -39,6 +39,9 @@ public class User {
 
     private String otpCode;
 
+    @Column(name = "otp_expiry")
+    private LocalDateTime otpExpiry;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

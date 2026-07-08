@@ -89,4 +89,30 @@ public class UserController {
         return ResponseEntity.ok(exists);
     }
 
+    // Change password
+    @PutMapping("/{id}/password")
+    public ResponseEntity<Void> changePassword(
+            @PathVariable Long id,
+            @RequestBody ChangePasswordRequest request) {
+
+        Optional<User> user = userService.getUserById(id);
+        if (user.isPresent()) {
+            boolean success = userService.changePassword(id, request.getOldPassword(), request.getNewPassword());
+            if (success) {
+                return ResponseEntity.ok().build();
+            }
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.notFound().build();
     }
+
+    class ChangePasswordRequest {
+        private String oldPassword;
+        private String newPassword;
+
+        public String getOldPassword() { return oldPassword; }
+        public void setOldPassword(String oldPassword) { this.oldPassword = oldPassword; }
+        public String getNewPassword() { return newPassword; }
+        public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
+    }
+}

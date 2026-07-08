@@ -58,4 +58,15 @@ public class AuthController {
                 )
         );
     }
+
+    //Reset Password Endpoint
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+        try {
+            String message = authService.resetPassword(request.getToken(), request.getNewPassword());
+            return ResponseEntity.ok(message);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
