@@ -22,4 +22,7 @@ public interface InternshipRepository extends JpaRepository<Internship, Long> {
 
     List<Internship> findByCompanyId(Long companyId);
     Optional<Internship> findByIdAndCompanyId(Long internshipId, Long companyId);
+
+    List<Internship> findTop5ByStatusOrderByCreatedAtDesc(InternshipStatus status);
+
 }
