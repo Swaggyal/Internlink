@@ -14,6 +14,7 @@ public class DashboardController {
 
     private final DashboardService dashboardService;
 
+    // Get complete student dashboard with recommended internships, saved internships, and recent activities
     @GetMapping("/student/{studentId}")
     public ResponseEntity<StudentDashboardResponse> getStudentDashboard(
             @PathVariable Long studentId) {
