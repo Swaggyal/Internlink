@@ -1,16 +1,8 @@
 package com.Internlink.backend.service;
 
-import com.Internlink.backend.dto.RecentActivityDTO;
-import com.Internlink.backend.dto.RecommendedInternshipDTO;
-import com.Internlink.backend.dto.StudentDashboardResponse;
-import com.Internlink.backend.entity.Internship;
-import com.Internlink.backend.entity.InternshipStatus;
-import com.Internlink.backend.entity.SavedInternship;
-import com.Internlink.backend.entity.Student;
-import com.Internlink.backend.repository.InternshipRepository;
-import com.Internlink.backend.repository.NotificationRepository;
-import com.Internlink.backend.repository.SavedInternshipRepository;
-import com.Internlink.backend.repository.StudentRepository;
+import com.Internlink.backend.dto.*;
+import com.Internlink.backend.entity.*;
+import com.Internlink.backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +18,10 @@ public class DashboardService {
     private final InternshipRepository internshipRepository;
     private final NotificationRepository notificationRepository;
     private final SavedInternshipRepository savedInternshipRepository;
+    private final ApplicationRepository applicationRepository;
+    private final CompanyRepository companyRepository;
+    private final UniversityRepository universityRepository;
+
 
     // Get complete student dashboard with all data
     public StudentDashboardResponse getStudentDashboard(Long studentId) {
@@ -130,5 +126,107 @@ public class DashboardService {
 
         // Calculate percentage match
         return (int) ((matches * 100) / internship.getRequiredSkills().size());
+    }
+
+    // Get complete company dashboard
+    public CompanyDashboardResponse getCompanyDashboard(Long companyId) {
+
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("Company not found"));
+
+        List<Internship> postedInternships = internshipRepository.findByCompanyId(companyId);
+
+        List<InternshipDTO> internshipDTOs = postedInternships.stream()
+                .map(internship -> {
+                    long appCount = applicationRepository.countByInternshipListingId(internship.getId());
+                    return new InternshipDTO(
+                            internship.getId(),
+                            internship.getTitle(),
+                            internship.getLocation(),
+                            internship.getPay(),
+                            internship.getStatus().toString(),
+                            (int) appCount
+                    );
+                })
+                .collect(Collectors.toList());
+
+        List<Application> allApplications = postedInternships.stream()
+                .flatMap(internship -> applicationRepository.findByInternshipListingId(internship.getId()).stream())
+                .collect(Collectors.toList());
+
+        long pendingCount = allApplications.stream()
+                .filter(app -> app.getStatus() == ApplicationStatus.PENDING)
+                .count();
+
+        long acceptedCount = allApplications.stream()
+                .filter(app -> app.getStatus() == ApplicationStatus.ACCEPTED)
+                .count();
+
+        CompanyDashboardResponse response = new CompanyDashboardResponse();
+        response.setCompanyName(company.getCompanyName());
+        response.setTotalInternships(postedInternships.size());
+        response.setTotalApplications(allApplications.size());
+        response.setPostedInternships(internshipDTOs);
+        response.setPendingApplications((int) pendingCount);
+        response.setAcceptedApplications((int) acceptedCount);
+
+        return response;
+    }
+
+    // Get complete university dashboard
+    public UniversityDashboardResponse getUniversityDashboard(Long universityId) {
+
+        // Fetch university from database
+        University university = universityRepository.findById(universityId)
+                .orElseThrow(() -> new RuntimeException("University not found"));
+
+        // Fetch students belonging to this university
+        List<Student> students =
+                studentRepository.findByUniversityName(university.getUniversityName());
+
+        // Count internships that are currently open
+        int availableInternships =
+                internshipRepository.findByStatus(InternshipStatus.OPEN).size();
+
+        // Count total applications submitted by these students
+        int totalApplications = students.stream()
+                .mapToInt(student ->
+                        applicationRepository.findByStudentId(student.getId()).size())
+                .sum();
+
+        // Count students who have at least one accepted application
+        int placedStudents = (int) students.stream()
+                .filter(student ->
+                        applicationRepository.findByStudentId(student.getId())
+                                .stream()
+                                .anyMatch(app ->
+                                        app.getStatus() == ApplicationStatus.ACCEPTED))
+                .count();
+
+        // Sort students by newest first
+        List<StudentSummary> recentStudents = students.stream()
+                .sorted((s1, s2) -> s2.getCreatedAt().compareTo(s1.getCreatedAt()))
+                .limit(5)
+                .map(student -> new StudentSummary(
+                        student.getId(),
+                        student.getEmail(),
+                        student.getProgram(),
+                        student.getYearOfStudy(),
+                        student.getProfileStrength()
+                ))
+                .toList();
+
+        // Build response
+        UniversityDashboardResponse response =
+                new UniversityDashboardResponse();
+
+        response.setUniversityName(university.getUniversityName());
+        response.setTotalStudents(students.size());
+        response.setAvailableInternships(availableInternships);
+        response.setTotalApplications(totalApplications);
+        response.setPlacedStudents(placedStudents);
+        response.setRecentStudents(recentStudents);
+
+        return response;
     }
 }
